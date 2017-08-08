@@ -1,5 +1,7 @@
 ---
 - hosts: all
   become: yes
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/bin/"
   roles:
     - webserver-django
