@@ -1,2 +1,2 @@
 ---
-- { path: /var/www/html/project, ignore: [] }
+- { path: /var/project, ignore: [] }
