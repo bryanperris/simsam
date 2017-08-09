@@ -1,2 +1,2 @@
 ---
-- { path: /var/project, ignore: [] }
+- { path: /var/project, ignore: [ sqlite3_db ] }
