@@ -336,6 +336,17 @@ def make_project(request):
     """Create a new project with a given name and open it."""
     simsam_user = SimsamUser.lookup(request.user)
     project_name = request.REQUEST.get('projectName')
+
+    # Check if the project name is blank, then use automatic names
+    if len(project_name) < 1:
+        project_name = "untitled"
+        num = 1
+
+        # If an untitled exists, keep incrementing the number
+        while len(simsam_user.projects.filter(name=project_name)) > 0:
+            project_name = "untitled" + str(num)
+            num += 1
+
     if len(simsam_user.projects.filter(name=project_name)) > 0:
         # if the project name already exists, open it
         project = simsam_user.projects.get(name=project_name)
