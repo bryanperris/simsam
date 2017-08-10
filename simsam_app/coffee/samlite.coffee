@@ -421,14 +421,23 @@ $ ->
         # reset the playbackFrames list so it can be rebuilt in the right order
         window.playbackFrames = []
         idsToSave = []
+        first = true;
         
         # build the new playback list and also rebuild the thumbnail click events
         # so they match the correct indices
         $("#video_output *").each (index, thumbnail) ->
             frameId = $(thumbnail).attr "data-frame-id"
+
+            if first
+                first = false
+                $(".frame-selected").removeClass("frame-selected")
+                $(thumbnail).addClass("frame-selected")
+
             window.playbackFrames.push frameRegistry[frameId]
             idsToSave.push frameId
             $(thumbnail).unbind("click").click ->
+                $(".frame-selected").removeClass("frame-selected")
+                $(thumbnail).addClass("frame-selected")
                 pause()
                 # if it's in recording mode then overlay, otherwise opaque
                 placeFrame index, (if recording then overlayClass else playbackClass)

@@ -358,18 +358,26 @@
       return $("#replay").append('<div class="blank-frame"><div>nothing here</div></div>');
     };
     rescanThumbnails = function() {
-      var idsToSave;
+      var first, idsToSave;
       if (window.debug) {
         console.log("rescanThumbnails");
       }
       window.playbackFrames = [];
       idsToSave = [];
+      first = true;
       return $("#video_output *").each(function(index, thumbnail) {
         var frameId;
         frameId = $(thumbnail).attr("data-frame-id");
+        if (first) {
+          first = false;
+          $(".frame-selected").removeClass("frame-selected");
+          $(thumbnail).addClass("frame-selected");
+        }
         window.playbackFrames.push(frameRegistry[frameId]);
         idsToSave.push(frameId);
         return $(thumbnail).unbind("click").click(function() {
+          $(".frame-selected").removeClass("frame-selected");
+          $(thumbnail).addClass("frame-selected");
           pause();
           placeFrame(index, (recording ? overlayClass : playbackClass));
           return window.playbackIndex = index;

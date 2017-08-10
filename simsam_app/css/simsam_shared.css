@@ -420,6 +420,10 @@ a.close {
 	background-position: -440px 50px;
 }
 
+.frame-selected {
+    border: 5px solid red;
+}
+
 #counts.highlight,
 #count_chart.highlight {
 	background-color: #ffff80;
