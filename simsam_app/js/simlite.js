@@ -1481,9 +1481,8 @@ $(document).ready(function () {
     };
     $('.uich_li').click(function () {
         console.log('uich_li close');
-        // XXX
-        //$('.simui').hide();
-        //action = interMap[$(this).attr('id')];
+        /* UI Callback for on bump actions */
+
         action = $(this).data('action');
         if (action === undefined) {
             $('.simui').hide();
@@ -1502,6 +1501,7 @@ $(document).ready(function () {
             hideRecording();
             */
         }
+        $('.simui').hide();
         uiInteractionCB(action);
         return false;
     });
