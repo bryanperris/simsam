@@ -1,4 +1,4 @@
-window.initSim = (function(){
+window.initSim = (function () {
 
     // Interaction State
     // This is a complex one. We turn on interactionWaiting when we start the
@@ -22,14 +22,14 @@ window.initSim = (function(){
     // close or double-click while in this state will release all state and
     // put us back in normal mode before we started all the editing.
 
-    interactionWaiting = false;     // in state of having just dropped measure
-    interactionFirst = true;        // true == no interactions added yet
-    currentTracker = null;          // operating measure object
+    interactionWaiting = false; // in state of having just dropped measure
+    interactionFirst = true; // true == no interactions added yet
+    currentTracker = null; // operating measure object
     currentSimObject = null;
     cloneObj = null;
     g_clickTime = 0;
-    g_toDeleteList = [];            // Multi-delete list
-    g_recordingClone = false;       // Programming Clone/Sprout or no
+    g_toDeleteList = []; // Multi-delete list
+    g_recordingClone = false; // Programming Clone/Sprout or no
     saDraggable = false;
     interactionsDraggable = false;
     randomDraggable = false;
@@ -42,18 +42,31 @@ window.initSim = (function(){
      */
     console.log("in simlite.js");
     canvas = new fabric.Canvas('container');
-    canvas.on({'object:modified': simObjectModified});
-    canvas.on({'object:selected': simObjectSelected});
-    canvas.on({'selection:cleared': simObjectCleared});
-    canvas.on({'selection:created': simMultiSelect});
-    canvas.on({'mouse:down': simObjectClicked});
-    canvas.on("after:render", function(){canvas.calcOffset();}); // for mouse offset issues
+    canvas.on({
+        'object:modified': simObjectModified
+    });
+    canvas.on({
+        'object:selected': simObjectSelected
+    });
+    canvas.on({
+        'selection:cleared': simObjectCleared
+    });
+    canvas.on({
+        'selection:created': simMultiSelect
+    });
+    canvas.on({
+        'mouse:down': simObjectClicked
+    });
+    canvas.on("after:render", function () {
+        canvas.calcOffset();
+    }); // for mouse offset issues
     window.globalPos = $('#construction_frame').offset();
-    
+
     setCanvasSize($(this).width());
-    
+
     // listen for a doubleclick. 
     fabric.util.addListener(fabric.document, 'dblclick', handleDoubleClick);
+
     function handleDoubleClick(ev) {
         // Assert we're at least clicking on the canvas
         var loc = canvas.getPointer(ev);
@@ -68,11 +81,11 @@ window.initSim = (function(){
             textBeginEditing(selectedObject);
             return;
         }
-        if (selectedObject !== null && selectedObject !== undefined) { 
-            if (! (typeof selectedObject['learningToggle'] === 'function')) {
+        if (selectedObject !== null && selectedObject !== undefined) {
+            if (!(typeof selectedObject['learningToggle'] === 'function')) {
                 return;
             }
-            if (selectedObject.stateRecording || interactionWaiting ) {
+            if (selectedObject.stateRecording || interactionWaiting) {
                 endRecording(selectedObject);
             } else {
                 // Change to menu
@@ -90,7 +103,7 @@ window.initSim = (function(){
 //
 
 // dynamic canvas size based on browser window
-setCanvasSize = function(width) {
+setCanvasSize = function (width) {
     browserWidth = parseInt(width);
     if (width < 910) {
         canvas.setHeight(420);
@@ -106,7 +119,7 @@ setCanvasSize = function(width) {
     $('#saved').css(globalPos);
     var w = $('#canceled').width();
     $('#canceled').css({
-        top:globalPos.top,
+        top: globalPos.top,
         left: globalPos.left + canvas.getWidth() - w - 10,
     });
     $('#saved').hide(0);
@@ -115,9 +128,9 @@ setCanvasSize = function(width) {
 }
 
 // Give us a point from an event and we will convert it to a global point
-getCanvasPoint = function(evPoint) {
+getCanvasPoint = function (evPoint) {
     var y;
-    var x; 
+    var x;
 
     // Accept top and left or x and y
     if (evPoint.top !== undefined) {
@@ -127,8 +140,8 @@ getCanvasPoint = function(evPoint) {
         y = evPoint.y;
         x = evPoint.x;
     }
-    
-    return { 
+
+    return {
         y: y - window.globalPos.top,
         x: x - window.globalPos.left,
         top: y - window.globalPos.top,
@@ -137,9 +150,9 @@ getCanvasPoint = function(evPoint) {
 }
 
 // Given a point on the canvas, convert it to a global (window) position
-getWorldPoint = function(evPoint) {
+getWorldPoint = function (evPoint) {
     var y;
-    var x; 
+    var x;
 
     // Accept top and left or x and y
     if (evPoint.top !== undefined) {
@@ -149,8 +162,8 @@ getWorldPoint = function(evPoint) {
         y = evPoint.y;
         x = evPoint.x;
     }
-    
-    return { 
+
+    return {
         y: y + window.globalPos.top,
         x: x + window.globalPos.left,
         top: y + window.globalPos.top,
@@ -158,7 +171,7 @@ getWorldPoint = function(evPoint) {
     };
 }
 
-sizeDrawer = function() {
+sizeDrawer = function () {
     var drawer = $('#sprite_drawer');
     var positionY = $(drawer).position().top;
     var heightParent = $(drawer).parent().height();
@@ -166,15 +179,15 @@ sizeDrawer = function() {
     $(drawer).height(heightParent - positionY - 30);
 }
 
-setPrivateButtonText = function() {
+setPrivateButtonText = function () {
     var text = 'Public';
-    if (! window.is_public) {
+    if (!window.is_public) {
         text = 'Private';
     }
     $('#private-button').html(text);
 }
 
-addSpriteToSim = function(filename, hash) {
+addSpriteToSim = function (filename, hash) {
     console.log('firing addSpriteToSim: ' + filename + ' ' + hash);
     console.log('pushing ' + hash + ' to spritecollection');
     spritecollection.push(hash);
@@ -193,19 +206,19 @@ addSpriteToSim = function(filename, hash) {
     });*/
 
     function addNewSpriteToDrawer(data, textStatus, jqXHR) {
-        console.log ('Calling addNewSpriteToDrawer: ' + hash);
+        console.log('Calling addNewSpriteToDrawer: ' + hash);
     }
 }
 
 
 // check and reset canvas size on resize
 // eventually this should probably scale objects and behaviors too
-$(window).resize(function() {
+$(window).resize(function () {
     setCanvasSize($(this).width());
 });
 
 // Utility Functions
-pointWithinElement = function(x, y, element) {
+pointWithinElement = function (x, y, element) {
 
     x1 = $(element).position().left;
     y1 = $(element).position().top;
@@ -219,18 +232,18 @@ pointWithinElement = function(x, y, element) {
 }
 
 // Borrowed from http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
-generateUUID = function() {
+generateUUID = function () {
     var d = new Date().getTime(); // .now() doesn't work in Opera
-    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, 
-            function(c) {
-                var r = (d + Math.random() * 16) %16 | 0;
-                d = Math.floor(d/16);
-                return (c=='x' ? r : (r&0x7|0x8)).toString(16);
-            });
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,
+        function (c) {
+            var r = (d + Math.random() * 16) % 16 | 0;
+            d = Math.floor(d / 16);
+            return (c == 'x' ? r : (r & 0x7 | 0x8)).toString(16);
+        });
     return uuid;
 }
 
-getObjectState = function(object) {
+getObjectState = function (object) {
     retObj = {
         width: object.getWidth(),
         height: object.getHeight(),
@@ -242,7 +255,7 @@ getObjectState = function(object) {
     return retObj;
 }
 
-getD = function(init , end) {
+getD = function (init, end) {
     return {
         //dxScale: end.width / init.width,
         dxScale: end.width - init.width,
@@ -255,7 +268,7 @@ getD = function(init , end) {
 }
 
 // Mouse-down detection. Only used for 'close' button detection.
-simObjectClicked = function(options) {
+simObjectClicked = function (options) {
     if (options.target && options.e) {
         var e = options.e;
         var target = options.target;
@@ -271,7 +284,7 @@ simObjectClicked = function(options) {
             return;
         }
 
-        if (currentSimObject instanceof TextGroup){
+        if (currentSimObject instanceof TextGroup) {
             currentSimObject.shouldClose(point);
         }
     }
@@ -279,7 +292,7 @@ simObjectClicked = function(options) {
 }
 
 // Handler for any object in Fabric.js that is selected (single clicked).
-simObjectSelected = function(options) {
+simObjectSelected = function (options) {
     if (typeof options.target.selected === 'function') {
         g_clickTime = (new Date()).getTime();
         options.target.selected();
@@ -288,7 +301,7 @@ simObjectSelected = function(options) {
         cloneWidgetHide();
         return;
     }
-    
+
     // If a text element is selected and we click something else, clear it
     if (currentSimObject && typeof currentSimObject.cleared === 'function') {
         currentSimObject.cleared();
@@ -296,7 +309,8 @@ simObjectSelected = function(options) {
     // We're waiting for a select to occur on a measurement
     if (interactionWaiting) {
         currentTracker.targetSprite = canvas.getActiveObject();
-        canvas.discardActiveObject(); interactionWaiting = false;
+        canvas.discardActiveObject();
+        interactionWaiting = false;
         $('#count_blocker').hide();
         return;
     }
@@ -305,7 +319,7 @@ simObjectSelected = function(options) {
     //$('#selected').show(250);
 }
 
-simObjectCleared = function(options) {
+simObjectCleared = function (options) {
     $('#multi-delete').hide(); // in case this was clearing a multi select
     if (currentSimObject && typeof currentSimObject.cleared === 'function') {
         currentSimObject.cleared();
@@ -326,13 +340,13 @@ simObjectCleared = function(options) {
     }
     currentSimObject = null;
 }
-simMultiSelect = function(options) {
+simMultiSelect = function (options) {
     if (options.target.type !== 'group') return;
     var target = options.target;
 
     g_toDeleteList = [];
 
-    target.forEachObject(function(obj) {
+    target.forEachObject(function (obj) {
         g_toDeleteList.push(obj);
     });
     multiDeleteSetLocation(target);
@@ -343,7 +357,7 @@ simMultiSelect = function(options) {
 
 // Called every time a sim object has finished moving so we can see if it
 // is interacting, etc.
-simObjectModified = function(options) {
+simObjectModified = function (options) {
     if (options.target) {
         target = options.target;
 
@@ -396,7 +410,7 @@ function startRecording(selectedObject, recType) {
         if (selectedObject.isClone()) {
             $('#uimod_clone').addClass('highlight');
         }
-        if (selectedObject.isSprout()){
+        if (selectedObject.isSprout()) {
             $('#uimod_sprout').addClass('highlight');
         }
     }
@@ -406,27 +420,27 @@ function startRecording(selectedObject, recType) {
 // Functions that alter display based on state
 //
 // Called after a successful return message from an Ajax save
-showSaved = function(data, textStatus, jqXHR) {
+showSaved = function (data, textStatus, jqXHR) {
     $('#saved').show();
     $('#saved').fadeOut(1000);
 }
-showCanceled = function(data, textStatus, jqXHR) {
+showCanceled = function (data, textStatus, jqXHR) {
     $('#canceled').show();
     $('#canceled').fadeOut(1000);
 }
 
-showRecording = function(recType) {
+showRecording = function (recType) {
     $('#record-type').html(recType);
     $('#record_status').addClass('is-recording');
 }
 
-hideRecording = function() {
+hideRecording = function () {
     $('#record-type').html('Not Recording');
     $('#record_status').removeClass('is-recording');
 }
 
 // Interaction chosen from Action Menu. Popup window to select interaction tgt.
-integrationBehaviorChoose = function(obj) {
+integrationBehaviorChoose = function (obj) {
     console.log("Choose object for interaction behavior");
     obj.learningToggle();
     // First, we should choose the object we're going to interact with.
@@ -438,8 +452,8 @@ integrationBehaviorChoose = function(obj) {
     canvas.forEachObject(function (iterObj) {
         var t = iterObj.spriteType;
 
-        if (typeof iterObj.interactionCallback === 'function' && 
-                typeList.indexOf(t) == -1) {
+        if (typeof iterObj.interactionCallback === 'function' &&
+            typeList.indexOf(t) == -1) {
             typeList.push(t);
             oneOfEach.push(iterObj);
         }
@@ -454,7 +468,7 @@ integrationBehaviorChoose = function(obj) {
         iEl.setAttribute('data-target-idx', i);
 
         $(iEl).click(function () {
-            console.log('sprout src = '+this.src);
+            console.log('sprout src = ' + this.src);
             var tIdx = $(this).data('target-idx');
             obj.interactionEvent(window.oneOfEach[tIdx]);
             $('#interaction-ui').hide();
@@ -478,7 +492,7 @@ setInteractionUILocation = function (sprout) {
     var myHeight = $(cui).outerHeight();
     ////var objHeight = sprout.getHeight();
     var left = offset.left;
-    $(cui).css({ 
+    $(cui).css({
         left: left + 10,
         top: 70 /* top margin */ + 20,
     });
@@ -487,7 +501,7 @@ setInteractionUILocation = function (sprout) {
 //
 // django functions
 //
-djangoDeleteImage = function(image_hash) {
+djangoDeleteImage = function (image_hash) {
     $.ajax({
         url: 'delete_image',
         type: 'POST',
@@ -499,15 +513,15 @@ djangoDeleteImage = function(image_hash) {
 }
 
 // Always just cached
-isProjectPublic = function(project_id) {
+isProjectPublic = function (project_id) {
     return window.is_public;
 }
 
-togglePrivate = function() {
+togglePrivate = function () {
     djangoSetProjectPublic(!window.is_public);
 }
 
-djangoSetProjectPublic = function(makePublic) {
+djangoSetProjectPublic = function (makePublic) {
     $.ajax({
         url: 'project_set_public',
         type: 'POST',
@@ -515,7 +529,7 @@ djangoSetProjectPublic = function(makePublic) {
             project_id: window.projectId,
             is_public: makePublic ? 1 : 0,
         },
-        success: function(data) {
+        success: function (data) {
             window.is_public = data.is_public;
             setPrivateButtonText();
         },
@@ -529,15 +543,15 @@ djangoSetProjectPublic = function(makePublic) {
 //
 // User Interface for Modifying Objects
 //
-deleteImageInternal = function(messageInfo, onSuccess) {
+deleteImageInternal = function (messageInfo, onSuccess) {
     buttons = {};
-    buttons[messageInfo.button] =  function() {
+    buttons[messageInfo.button] = function () {
         if (onSuccess !== undefined) {
             onSuccess();
         }
         $(this).dialog('close');
     };
-    buttons['Cancel'] = function() {
+    buttons['Cancel'] = function () {
         $(this).dialog('close');
     };
 
@@ -553,13 +567,13 @@ deleteImageInternal = function(messageInfo, onSuccess) {
 }
 
 // Remove only the individual object
-deleteImageSingle = function(obj) {
+deleteImageSingle = function (obj) {
     messageInfo = {
         message: 'This item will be permanently deleted.  Are you sure?',
         title: 'Delete this object?',
         button: 'Delete',
     };
-    onSuccess = function() {
+    onSuccess = function () {
         obj.removeFromList();
         obj.remove();
     }
@@ -567,14 +581,14 @@ deleteImageSingle = function(obj) {
 }
 
 // Remove all instances of the image from the sim/screen only
-deleteImageClass = function(spriteType, classImage) {
+deleteImageClass = function (spriteType, classImage) {
 
     messageInfo = {
         message: 'All items of this type will be permanently deleted.  Are you sure?',
         title: 'Delete all objects of this type?',
         button: 'Delete All',
     };
-    onSuccess = function() {
+    onSuccess = function () {
         canvas.forEachObject(function (iterObj) {
             if (iterObj.spriteType == spriteType) {
                 iterObj._count = 0;
@@ -589,14 +603,14 @@ deleteImageClass = function(spriteType, classImage) {
 }
 
 // Remove all iamges from the screen/sim and from the db and all animations
-deleteImageFully = function(spriteType, classImage) {
+deleteImageFully = function (spriteType, classImage) {
     messageInfo = {
         message: 'This sprite and all instances will be permanently deleted. ' +
             'Are you sure?',
         title: 'Delete this image fully?',
         button: 'Delete All',
     };
-    onSuccess = function() {
+    onSuccess = function () {
         canvas.forEachObject(function (iterObj) {
             if (iterObj.spriteType == spriteType) {
                 iterObj.removeFromList();
@@ -607,7 +621,7 @@ deleteImageFully = function(spriteType, classImage) {
         image_hash = $(classImage).attr('data-hash');
         $(classImage).remove();
         djangoDeleteImage(image_hash);
-        
+
         /* something here is not working
 		for(i = 0; i < spriteTypeList.length; i++){
 			tempobj = new spriteTypeList[i];
@@ -617,11 +631,11 @@ deleteImageFully = function(spriteType, classImage) {
 				break;
 			}
 		}*/
-		
-		delete spriteTypeList[spriteType];
-		
+
+        delete spriteTypeList[spriteType];
+
         window.save();
-		
+
     }
     deleteImageInternal(messageInfo, onSuccess);
 }
@@ -630,27 +644,27 @@ deleteImageFully = function(spriteType, classImage) {
 // Random Slider Handlers
 //
 
-randomDrawArc = function(ang) {
+randomDrawArc = function (ang) {
     rarc = $('#random-arc');
     width = $(rarc).attr('width');
     height = $(rarc).attr('height');
     ctx = $(rarc)[0].getContext('2d');
-    ctx.clearRect(0,0, width, height);
+    ctx.clearRect(0, 0, width, height);
     ctx.fillStyle = '#62c004';
 
     //pct = 80;
     lineWidth = 0;
-    pm = (ang/180.1) * Math.PI; // extra .1 keeps arc a circle at 100%
-    max = (Math.PI*1.5) + pm;
-    max = max % (Math.PI*2);
-    min = (Math.PI*1.5) - pm;
-    radius = Math.max(width/2, height/2) - lineWidth / 2;
-    ctx.moveTo(width/2, height/2);
+    pm = (ang / 180.1) * Math.PI; // extra .1 keeps arc a circle at 100%
+    max = (Math.PI * 1.5) + pm;
+    max = max % (Math.PI * 2);
+    min = (Math.PI * 1.5) - pm;
+    radius = Math.max(width / 2, height / 2) - lineWidth / 2;
+    ctx.moveTo(width / 2, height / 2);
     ctx.beginPath();
     ctx.strokeStyle = '#62c004';
     ctx.lineWidth = lineWidth;
-    ctx.arc(width/2, height/2, radius, min, max, false);
-    ctx.lineTo(width/2, height/2);
+    ctx.arc(width / 2, height / 2, radius, min, max, false);
+    ctx.lineTo(width / 2, height / 2);
     //ctx.lineTo(width/2 + radius * Math.cos(min), height/2 + radius * Math.sin(min));
     ctx.fill();
     ctx.stroke();
@@ -658,7 +672,7 @@ randomDrawArc = function(ang) {
 
 }
 
-randomSliderPosition = function(obj) {
+randomSliderPosition = function (obj) {
     var leftPos = obj.getLeft();
     var topPos = obj.getTop();
     var width = obj.getWidth();
@@ -669,27 +683,33 @@ randomSliderPosition = function(obj) {
     posEl = $('#random-range');
 
     // + width/2 if left-aligned object
-    cpos = leftPos - sliderWidth/2 + offset.left;
+    cpos = leftPos - sliderWidth / 2 + offset.left;
     tpos = topPos - (106 + 150) + offset.top;
     if (tpos < offset.top) tpos = offset.top;
-    $(posEl).css({ top: tpos, left: cpos });
+    $(posEl).css({
+        top: tpos,
+        left: cpos
+    });
 
     arcWidth = 150; // or = width
     arcHeight = 150; // or = height
-    arcTop = topPos - height/2 - 40; // 40 is padding
-    arcLeft = leftPos - arcWidth/2;
+    arcTop = topPos - height / 2 - 40; // 40 is padding
+    arcLeft = leftPos - arcWidth / 2;
     arcObj = $('#random-ui');
-    console.log('Setting width ' +width + ' height: ' + height);
+    console.log('Setting width ' + width + ' height: ' + height);
     arcObj.width(arcWidth);
     arcObj.height(arcHeight);
-    arcObj.css({left: arcLeft, top: arcTop});
+    arcObj.css({
+        left: arcLeft,
+        top: arcTop
+    });
     $('#random-arc').attr('width', arcWidth);
     $('#random-arc').attr('height', arcHeight);
     randomDrawArc(obj.randomRange);
 }
 
 // de-randomize (close, or randomize un-selected, etc.)
-randomSliderRelease = function(obj) {
+randomSliderRelease = function (obj) {
     if (obj && obj.savedAngle !== undefined) {
         obj.setAngle(obj.savedAngle);
         delete obj.savedAngle;
@@ -698,7 +718,7 @@ randomSliderRelease = function(obj) {
 }
 
 // Display the widget for setting random breadth
-randomSliderShow = function(obj) {
+randomSliderShow = function (obj) {
     randomSliderPosition(obj);
     if (!randomDraggable) {
         randomDraggable = true;
@@ -715,7 +735,7 @@ randomSliderShow = function(obj) {
     canvas.renderAll();
 }
 
-randomSliderHide = function(obj) {
+randomSliderHide = function (obj) {
     if (obj == null) {
         obj = canvas.getActiveObject();
     }
@@ -734,13 +754,13 @@ setCloneUILocation = function (clone) {
     var myHeight = $(cui).outerHeight();
     var objHeight = clone.getHeight();
     var offset = $('#construction_frame').offset();
-    $(cui).css({ 
-        top: clone.getTop() - objHeight/2 - myHeight - 15 + offset.top,
-        left: clone.getLeft() - myWidth/2 + offset.left,
+    $(cui).css({
+        top: clone.getTop() - objHeight / 2 - myHeight - 15 + offset.top,
+        left: clone.getLeft() - myWidth / 2 + offset.left,
     });
 }
 
-cloneWidgetShow = function(obj) {
+cloneWidgetShow = function (obj) {
     console.log("cloneWidgetShow");
     var x = obj.getLeft();
     var y = obj.getTop();
@@ -765,7 +785,7 @@ cloneWidgetShow = function(obj) {
     });
     cloneObj.myOriginalTop = startY;
     cloneObj.myOriginalLeft = startX;
-    cloneObj.modified = function() {
+    cloneObj.modified = function () {
         setCloneUILocation(this);
     }
     cloneObj.daddy = obj;
@@ -786,7 +806,7 @@ cloneWidgetShow = function(obj) {
 
 // Remove the widget that allows for adjusting clones and set the values
 // into the original object and clone.
-cloneWidgetHide = function(obj) {
+cloneWidgetHide = function (obj) {
     $('#clone-ui').hide();
     if (cloneObj != null) {
         var nowTop = cloneObj.getTop();
@@ -812,7 +832,7 @@ cloneWidgetHide = function(obj) {
     }
 }
 
-cloneWidgetAdd = function(amt) {
+cloneWidgetAdd = function (amt) {
     var ourDiv = $('#clone-data');
     var value = $(ourDiv).data('value');
     value += amt;
@@ -834,7 +854,7 @@ setSproutUILocation = function (sprout) {
     var myHeight = $(cui).outerHeight();
     ////var objHeight = sprout.getHeight();
     var left = offset.left;
-    $(cui).css({ 
+    $(cui).css({
         left: left + 10,
         top: 70 /* top margin */ + 20,
         /*
@@ -848,7 +868,7 @@ setSproutUILocation = function (sprout) {
         */
 }
 
-sproutWidgetShow = function(obj) {
+sproutWidgetShow = function (obj) {
     console.log("sproutWidgitShow");
     // First, we should choose the object we're going to interact with.
     $('#sprout-ui').empty();
@@ -866,7 +886,7 @@ sproutWidgetShow = function(obj) {
         // This function calls back to setup the SproutAction with the
         // appropriate target
         $(iEl).click(function () {
-            console.log('sprout src = '+this.src);
+            console.log('sprout src = ' + this.src);
             var tType = $(this).data('target-type');
             obj.setSproutTarget(tType);
             tType = obj.getSproutTarget();
@@ -879,10 +899,10 @@ sproutWidgetShow = function(obj) {
     setSproutUILocation(cloneObj);
     $('#clone-name').html('Sprout');
     $('#sprout-ui').show();
-    
+
 }
 
-sproutCloningWidgetShow = function(obj) {
+sproutCloningWidgetShow = function (obj) {
     // Sprout is a little different. Show the clone widget now that we've
     // finished selecting the object to sprout.
     setCloneUILocation(obj);
@@ -918,7 +938,7 @@ sproutCloningWidgetShow = function(obj) {
     });
     cloneObj.myOriginalTop = startY;
     cloneObj.myOriginalLeft = startX;
-    cloneObj.modified = function() {
+    cloneObj.modified = function () {
         setSproutUILocation(this);
     }
     cloneObj.daddy = obj;
@@ -928,7 +948,7 @@ sproutCloningWidgetShow = function(obj) {
 
 }
 
-sproutWidgetHide = function(obj) {
+sproutWidgetHide = function (obj) {
     $('#sprout-ui').hide();
     if (cloneObj != null) {
         var nowTop = cloneObj.getTop();
@@ -954,11 +974,11 @@ sproutWidgetHide = function(obj) {
 
 // Multi Selection Delete Functions
 
-multiDeleteExecute = function() {
+multiDeleteExecute = function () {
     var i;
     var dl = g_toDeleteList;
 
-    for(i=0; i < dl.length; i++) {
+    for (i = 0; i < dl.length; i++) {
         var obj = dl[i];
         if (typeof obj.remove === 'function') {
             obj.removeFromList();
@@ -972,12 +992,12 @@ multiDeleteExecute = function() {
     $('#multi-delete').hide();
 }
 
-multiDeleteCancel = function() {
+multiDeleteCancel = function () {
     g_toDeleteList = [];
     $('#multi-delete').hide();
 }
 
-multiDeleteSetLocation = function(group) {
+multiDeleteSetLocation = function (group) {
     var coord = group.oCoords;
     var t = coord.tl.y;
     var l = coord.tl.x;
@@ -998,7 +1018,7 @@ multiDeleteSetLocation = function(group) {
 }
 
 // Hide the sidebar menu for when an object is in "modifying" state
-modifyingHide = function(p_obj) {
+modifyingHide = function (p_obj) {
     var obj = p_obj;
     if (obj == null) {
         obj = canvas.getActiveObject();
@@ -1015,14 +1035,14 @@ modifyingHide = function(p_obj) {
     }
 }
 
-modifyingShow = function(obj) {
+modifyingShow = function (obj) {
     var offset = window.globalPos;
     var posLeft = obj.getLeft();
     var width = obj.getWidth();
     var posTop = obj.getTop() + offset.top;
     var height = obj.getHeight();
     // Right now we're using centered positions.  Adjust.
-    posLeft += width / 2  + offset.left + 15; // +15 padding
+    posLeft += width / 2 + offset.left + 15; // +15 padding
     posTop -= height;
     $('#modifying').css({
         top: posTop,
@@ -1036,7 +1056,7 @@ modifyingShow = function(obj) {
     showRecording('Individual');
 }
 
-modifyingCancel = function() {
+modifyingCancel = function () {
     modifyingHide();
 }
 
@@ -1044,14 +1064,17 @@ modifyingCancel = function() {
 measureShowCounts = false;
 measureShowCharts = false;
 
-simDragStop = function(ev, ui) {
+simDragStop = function (ev, ui) {
     var i;
     var sprite;
     var match = false;
     var source;
 
-    var point = getCanvasPoint({top: ev.pageY, left: ev.pageX});
-    for(i=0; i < window.spriteList.length; i++) {
+    var point = getCanvasPoint({
+        top: ev.pageY,
+        left: ev.pageX
+    });
+    for (i = 0; i < window.spriteList.length; i++) {
         sprite = window.spriteList[i];
         var tl = sprite.oCoords.tl;
         var br = sprite.oCoords.br;
@@ -1062,7 +1085,7 @@ simDragStop = function(ev, ui) {
         }
     }
     if (!match) return;
-    
+
     source = ev.target.id;
     if (source == 'iact_toggle') {
         currentTracker = new Tracker;
@@ -1085,7 +1108,7 @@ simDragStop = function(ev, ui) {
     simChartChoose(sprite);
 }
 
-simChartChoose = function(obj) {
+simChartChoose = function (obj) {
     console.log("Choose object for interaction tracking");
     // First, we should choose the object we're going to interact with.
     $('#interaction-ui').empty();
@@ -1096,7 +1119,7 @@ simChartChoose = function(obj) {
     canvas.forEachObject(function (iterObj) {
         var t = iterObj.spriteType;
 
-        if (typeof iterObj.interactionCallback === 'function' && 
+        if (typeof iterObj.interactionCallback === 'function' &&
             t != obj.spriteType && typeList.indexOf(t) == -1) {
             typeList.push(t);
             oneOfEach.push(iterObj);
@@ -1112,7 +1135,7 @@ simChartChoose = function(obj) {
         iEl.setAttribute('data-target-idx', i);
 
         $(iEl).click(function (e) {
-            console.log('sprout src = '+this.src);
+            console.log('sprout src = ' + this.src);
             var tIdx = $(this).data('target-idx');
             //$('#interaction-ui').hide();
             currentTracker.targetType = tIdx;
@@ -1126,10 +1149,10 @@ simChartChoose = function(obj) {
     $('#interaction-ui').show();
 }
 
-clearTrackers = function() {
+clearTrackers = function () {
     var i;
 
-    for (i=0; i < window.spriteList.length; i++) {
+    for (i = 0; i < window.spriteList.length; i++) {
         var s = window.spriteList[i];
         if (s === undefined) continue;
         if (s.countElement == null) continue;
@@ -1149,7 +1172,7 @@ clearTrackers = function() {
 /* User Interface code for Sprite InteractionRule */
 uiInteractionCB = null;
 
-uiInteractionChoose = function(sprite, callback) {
+uiInteractionChoose = function (sprite, callback) {
     uiInteractionCB = callback;
     var offset = window.globalPos;
     var posLeft = sprite.getLeft();
@@ -1157,7 +1180,7 @@ uiInteractionChoose = function(sprite, callback) {
     var posTop = sprite.getTop() + offset.top;
     var height = sprite.getHeight();
     // Right now we're using centered positions.  Adjust.
-    posLeft += width / 2  + offset.left + 15; // +15 padding
+    posLeft += width / 2 + offset.left + 15; // +15 padding
     posTop -= height;
     $('#interactions').css("top", posTop);
     $('#interactions').css("left", posLeft);
@@ -1176,7 +1199,7 @@ uiInteractionChoose = function(sprite, callback) {
 //
 // See toolTextClick for creation
 
-textBeginEditing = function(obj) {
+textBeginEditing = function (obj) {
     currentTextObject = obj;
 
     var offset = window.globalPos;
@@ -1191,7 +1214,7 @@ textBeginEditing = function(obj) {
     $(textbox).show(250);
 }
 
-textEditSet = function(obj, ev) {
+textEditSet = function (obj, ev) {
     var textbox = $('#text-alter-field');
     currentTextObject.setText($(textbox).val());
     console.log('Text: ' + $(textbox).val());
@@ -1200,14 +1223,14 @@ textEditSet = function(obj, ev) {
     window.save();
 }
 
-textEditCancel = function(obj, ev) {
+textEditCancel = function (obj, ev) {
     $('#text-modify').hide(250);
 }
 
 //
 // SaveAs Handlers
 //
-saveasBeginEditing = function(obj) {
+saveasBeginEditing = function (obj) {
     currentTextObject = obj;
     $('#advanced-menu').hide();
 
@@ -1224,19 +1247,19 @@ saveasBeginEditing = function(obj) {
 
     window.listSims();
 }
-saveAsEditSet = function() {
+saveAsEditSet = function () {
     var textbox = $('#saveas-alter-field');
     window.g_currentSaveName = $(textbox).val();
     $('#saveas-name').hide();
 }
-saveAsCancel = function() {
+saveAsCancel = function () {
     $('#saveas-name').hide();
 }
 
 //
 // load file Handlers
 //
-listBeginEditing = function(obj) {
+listBeginEditing = function (obj) {
     currentTextObject = obj;
     $('#advanced-menu').hide();
 
@@ -1252,21 +1275,21 @@ listBeginEditing = function(obj) {
 
     window.listSims();
 }
-listEditSet = function() {
+listEditSet = function () {
     var textbox = $('#saveas-alter-field');
     window.g_currentSaveName = $(textbox).val();
     $('#saveas-name').hide();
 }
-listCancel = function() {
+listCancel = function () {
     $('#list-states').hide();
 }
 
-showSelectAction = function(selectedObject) {
+showSelectAction = function (selectedObject) {
     var menu_width = 220;
     var menu_height = 138;
     // Position select-action 
     var cX = selectedObject.getLeft() + globalPos.left;
-    var cY = selectedObject.getTop()+ globalPos.top;
+    var cY = selectedObject.getTop() + globalPos.top;
 
     var sa = $('#select-action');
 
@@ -1282,15 +1305,15 @@ showSelectAction = function(selectedObject) {
     });
 
     $('#select-action').show();
-    $('#select-behavior').off('click').on('click', function(ev){
+    $('#select-behavior').off('click').on('click', function (ev) {
         $('#select-action').hide();
         startRecording(selectedObject, 'Individual');
     });
-    $('#select-delete').off('click').on('click', function(ev){
+    $('#select-delete').off('click').on('click', function (ev) {
         $('#select-action').hide();
         deleteImageSingle(selectedObject);
     });
-    $('#select-interaction').off('click').on('click', function(ev){
+    $('#select-interaction').off('click').on('click', function (ev) {
         $('#select-action').hide();
         // show the object picker next
         // Install click handlers for the objects
@@ -1299,7 +1322,7 @@ showSelectAction = function(selectedObject) {
     });
 }
 
-selectActionCancel = function() {
+selectActionCancel = function () {
     $('#select-action').hide();
 }
 
@@ -1307,7 +1330,7 @@ selectActionCancel = function() {
 // Click Event Handlers
 //
 
-spriteChartClick = function(obj, ev) {
+spriteChartClick = function (obj, ev) {
     var i;
     var sprite = null;
     var hash = obj['data-hash'];
@@ -1329,7 +1352,7 @@ spriteChartClick = function(obj, ev) {
     ev.stopPropagation();
 }
 
-toolTextClick = function(obj, ev) {
+toolTextClick = function (obj, ev) {
     var text = new TextLabel('default text');
     text.init()
     text.setLeft(canvas.getWidth() / 2);
@@ -1339,16 +1362,16 @@ toolTextClick = function(obj, ev) {
     window.save();
 }
 
-toolGearClick = function(obj, ev) {
+toolGearClick = function (obj, ev) {
     var menu = $('#advanced-menu');
     var button = $('#gear_tool');
     var mHeight = $(menu).height();
     var mWidth = $(menu).width();
     var buttOff = $(button).offset();
     var buttWidth = $(button).width();
-    $(menu).css( {
+    $(menu).css({
         top: buttOff.top - mHeight - 30,
-        left: buttOff.left + buttWidth/2 - mWidth / 2,
+        left: buttOff.left + buttWidth / 2 - mWidth / 2,
     });
     $(menu).show();
 }
@@ -1358,7 +1381,7 @@ forgetEverything = function () {
     window.clearEverything();
 }
 
-window.save = function() {
+window.save = function () {
     rawData = saveSprites();
     $.ajax({
         url: 'save_sim_state',
@@ -1373,7 +1396,7 @@ window.save = function() {
     });
 }
 
-window.load = function() {
+window.load = function () {
     console.log('load');
     //loadSprites($('#data').html());
     $.ajax({
@@ -1384,14 +1407,14 @@ window.load = function() {
             sim_id: window.simulationId,
         },
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             //console.log('data.simState = '+data.simState);
             if (data.status == 'Success') {
-                console.log('data.serialized = '+data.serialized);
+                console.log('data.serialized = ' + data.serialized);
                 loadSprites(data.serialized);
             } else if (data.status == 'Failed') {
                 if (data.debug.length) {
-                    console.log ('Error(load): ' + data.debug);
+                    console.log('Error(load): ' + data.debug);
                 }
                 if (data.message.length) {
                     //so far just because nothing is there
@@ -1403,7 +1426,7 @@ window.load = function() {
     });
 }
 
-window.listSims = function() {
+window.listSims = function () {
     console.log('listSims');
     //loadSprites($('#data').html());
     $.ajax({
@@ -1413,17 +1436,17 @@ window.listSims = function() {
             sim_id: window.simulationId,
         },
         dataType: 'json',
-        success: function(data) {
+        success: function (data) {
             if (data.status == 'Success') {
                 var listDiv = $('#list-text-list');
                 var stateList = data.list;
                 $(listDiv).html('');
-                for(i=0; i < stateList.length; i++) {
+                for (i = 0; i < stateList.length; i++) {
                     var cName = stateList[i];
                     var a = document.createElement('a');
                     a.innerHTML = cName;
                     $(a).data('name', cName);
-                    $(a).on('click', function(i){
+                    $(a).on('click', function (i) {
                         window.g_currentSaveName = $(this).data('name');
                         window.load();
                         $('#list-states').hide();
@@ -1432,7 +1455,7 @@ window.listSims = function() {
                 }
             } else if (data.status == 'Failed') {
                 if (data.debug.length) {
-                    console.log ('Error(load): ' + data.debug);
+                    console.log('Error(load): ' + data.debug);
                 }
                 if (data.message.length) {
                     //so far just because nothing is there
@@ -1445,12 +1468,13 @@ window.listSims = function() {
 }
 
 // UI Setup for events
-$(document).ready(function() {
+$(document).ready(function () {
 
     $('body').click(function () {
         $('#count_big_chart').hide(100);
     });
-    interMap = { 'uich_trans': 'transpose',
+    interMap = {
+        'uich_trans': 'transpose',
         'uich_clone': 'clone',
         'uich_delete': 'delete',
         'uich_close': 'close',
@@ -1467,8 +1491,7 @@ $(document).ready(function() {
             return false;
         }
         // Transpose still needs a double-click to exit, the rest exit now
-        if (action == 'transpose') {
-        } else if (action == 'close') {
+        if (action == 'transpose') {} else if (action == 'close') {
             $('.simui').hide();
             interactionWaiting = false;
             hideRecording();
@@ -1484,19 +1507,19 @@ $(document).ready(function() {
     });
 
     // Functions for UI when Selected
-    $('#uise_del').click(function() {
+    $('#uise_del').click(function () {
         obj = canvas.getActiveObject();
 
         deleteImageSingle(obj);
     });
 
-    $('#uise_delall').click(function() {
+    $('#uise_delall').click(function () {
         obj = canvas.getActiveObject();
         deleteImageClass(obj.spriteType);
     });
 
     // Functions for UI when Modifying
-    $('#uimod_rand').click(function() {
+    $('#uimod_rand').click(function () {
         obj = canvas.getActiveObject();
         if (!obj.isEditing) return;
         random = obj.isRandom();
@@ -1512,13 +1535,13 @@ $(document).ready(function() {
         }
     });
 
-    $('#uimod_clone').click(function() {
+    $('#uimod_clone').click(function () {
         g_recordingClone = true;
         console.log('Onclick');
         obj = canvas.getActiveObject();
         console.log('Object click =' + obj);
         if (!obj.isEditing) {
-            console.log('isEditing returns '+ obj.isEditing);
+            console.log('isEditing returns ' + obj.isEditing);
             console.log('Object not being edited');
             return;
         }
@@ -1534,7 +1557,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#uimod_sprout').click(function() {
+    $('#uimod_sprout').click(function () {
         g_recordingClone = true;
         obj = canvas.getActiveObject();
         if (!obj.isEditing) return;
@@ -1548,32 +1571,32 @@ $(document).ready(function() {
         }
     });
 
-    $('#clone-minus').click(function() {
+    $('#clone-minus').click(function () {
         cloneWidgetAdd(-10);
     });
 
-    $('#clone-plus').click(function() {
+    $('#clone-plus').click(function () {
         cloneWidgetAdd(10);
     });
 
     $('#randomslider').slider({
         min: 0,
         max: 180,
-        slide: function(ev, ui) {
+        slide: function (ev, ui) {
             obj = canvas.getActiveObject();
             if (obj !== undefined) {
                 obj.randomRange = ui.value;
             }
-            randomDrawArc(ui.value); 
+            randomDrawArc(ui.value);
         },
     });
 
-    $('#save').click(function() {
+    $('#save').click(function () {
         console.log('save')
         window.save();
     });
 
-    $('#load').click(function() {
+    $('#load').click(function () {
         console.log('load')
         window.load();
     });
@@ -1594,52 +1617,52 @@ $(document).ready(function() {
     };
     $('#iact_toggle').draggable(simButtonObj);
     $('#iact_chart').draggable(simButtonObj);
-    $('#counts').click(function() {
+    $('#counts').click(function () {
         measureShowCounts = !measureShowCounts;
         if (measureShowCounts) {
             $('#counts').addClass('highlight');
             $('#count_chart').removeClass('highlight');
-            $('.sprite-count').each(function(idx, e) {
+            $('.sprite-count').each(function (idx, e) {
                 $(this).show(100);
             });
-            $('.sprite-chart').each(function(idx, e) {
+            $('.sprite-chart').each(function (idx, e) {
                 $(this).hide(100);
             });
             measureShowCharts = false;
         } else {
             $('#counts').removeClass('highlight');
-            $('.sprite-count').each(function(idx, e) {
+            $('.sprite-count').each(function (idx, e) {
                 $(this).hide(100);
             });
         }
     });
-    $('#count_chart').click(function() {
+    $('#count_chart').click(function () {
         measureShowCharts = !measureShowCharts;
         if (measureShowCharts) {
             $('#count_chart').addClass('highlight');
             $('#counts').removeClass('highlight');
             measureShowCounts = false;
-            $('.sprite-chart').each(function(idx, e) {
+            $('.sprite-chart').each(function (idx, e) {
                 $(this).show(100);
             });
-            $('.sprite-count').each(function(idx, e) {
+            $('.sprite-count').each(function (idx, e) {
                 $(this).hide(100);
             });
             $.sparkline_display_visible();
         } else {
-            $('.sprite-chart').each(function(idx, e) {
+            $('.sprite-chart').each(function (idx, e) {
                 $(this).hide(100);
             });
             $('#count_chart').removeClass('highlight');
         }
     });
 
-    $('#sim_min').click(function(ev) {
+    $('#sim_min').click(function (ev) {
         ev.preventDefault();
         $('#bottom_frame').slideToggle();
         $('#sim_max').show(500);
     });
-    $('#sim_max').click(function(ev) {
+    $('#sim_max').click(function (ev) {
         ev.preventDefault();
         $('#bottom_frame').slideToggle();
         $(this).hide(250);
