@@ -31,9 +31,11 @@
                 {% if projectList %}  
                 Open an existing project:  
                 <form method="post" name="myForm" action="chooseproject/">
-                    {% for project in projectList %}
-                      <button type="submit" class="button" name="projectId" value="{{ project.id }}" />{{ project.name }}</button><br>
-                    {% endfor %}
+                    <div style="text-align: left;margin-left: 32%;margin-top: 10px;">
+                        {% for project in projectList %}
+                          <button type="submit" class="button" name="projectId" value="{{ project.id }}" />{{ project.name }}</button><br>
+                        {% endfor %}
+                    </div>
                 </form>
                 {% endif %}
                 
