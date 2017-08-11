@@ -56,7 +56,7 @@ def cloneProject(project, owner):
 
     simulations = Simulation.objects.filter(project_id=old_project_id)
     for sim in simulations:
-        print >> sys.stderr, "Cloning Simulation, project %d" % old_project_id
+        # print >> sys.stderr, "Cloning Simulation, project %d" % old_project_id
         cloneSimulation(sim, project)
 
     return project
