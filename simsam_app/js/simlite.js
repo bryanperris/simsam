@@ -995,19 +995,29 @@ sproutWidgetHide = function (obj) {
 // Multi Selection Delete Functions
 
 multiDeleteExecute = function () {
-    var i;
-    var dl = g_toDeleteList;
+    messageInfo = {
+        message: 'These items will be permanently deleted.  Are you sure?',
+        title: 'Delete these objects?',
+        button: 'Delete',
+    };
 
-    for (i = 0; i < dl.length; i++) {
-        var obj = dl[i];
-        if (typeof obj.remove === 'function') {
-            obj.removeFromList();
-            obj.remove();
+    onSuccess = function () {
+        var i;
+        var dl = g_toDeleteList;
+
+        for (i = 0; i < dl.length; i++) {
+            var obj = dl[i];
+            if (typeof obj.remove === 'function') {
+                obj.removeFromList();
+                obj.remove();
+            }
         }
+        canvas.deactivateAll();
+        canvas.renderAll();
+        save();
     }
-    canvas.deactivateAll();
-    canvas.renderAll();
-    save();
+
+    deleteImageInternal(messageInfo, onSuccess);
 
     $('#multi-delete').hide();
 }
