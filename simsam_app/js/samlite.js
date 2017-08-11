@@ -410,7 +410,10 @@
           }
         }
       }
-      return saveFrameSequence();
+      saveFrameSequence();
+      if (window.playbackFrames.length === 0) {
+        return $('#startcropping').hide();
+      }
     };
     window.play = function() {
       var beginningIndex, container, frame, i, index, interval, len;

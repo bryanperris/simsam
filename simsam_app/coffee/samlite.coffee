@@ -472,6 +472,7 @@ $ ->
                     clearPlayback()
                     placeBlankFrame()
         saveFrameSequence()
+        if window.playbackFrames.length == 0 then $('#startcropping').hide()
     
     # Put a series of opaque still canvases over the webcam view, effectively
     # "playing back" the movie. Works by looping through the playback frames
