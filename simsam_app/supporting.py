@@ -33,7 +33,7 @@ def cloneSimulation(simulation, new_project):
 
     simstates = SimulationState.objects.filter(simulation_id=old_sim_id)
     for state in simstates:
-        print >> sys.stderr, "Cloning simstate %d" % old_sim_id
+        #print >> sys.stderr, "Cloning simstate %d" % old_sim_id
         cloneSimState(state, simulation)
     
 
