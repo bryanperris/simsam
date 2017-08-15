@@ -44,8 +44,9 @@
     	left: 0px;
     	top: 0px;
     	width: 100%;
-    	height: 100%;
+    	/*! height: 100%; */
         background-position: center center;
+    	margin-top: 50px;
     }
     
     .overlay-frame {
@@ -59,11 +60,12 @@
     #camera {
     	/*position: absolute;*/
     	top: 0px;
-    	height: 100%;
+    	/*! height: 100%; */
     	/*width: 100%;*/
     	left: 0;
     	/*-o-object-fit: fill;*/
     	border-radius: 15px;
+    	margin-top: 50px;
     }
     
     .playback-frame {
@@ -421,7 +423,7 @@ a.close {
 }
 
 .frame-selected {
-    border: 5px solid red;
+    border: solid red;
 }
 
 #counts.highlight,

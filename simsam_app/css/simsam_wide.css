@@ -1,5 +1,5 @@
 .wrapper {
-	height: 675px;
+	height: 710px;
 	width: 1200px;
 }
 
@@ -15,13 +15,13 @@
 /*********************/
 
 .bottom-menu {
-    width: 950;
-    height: 95;
+    width: 950px;
+    height: 130px;
 }
 
 #video_output {
     top: 578px;
-    max-height: 97px;
+    max-height: 130px;
     left: 130px;
     right: 330px;
 }
@@ -46,10 +46,11 @@
     height: 97px;
 	font-size: 6em;
     width: 78px;
+    padding-top: 20px;
 }
 
 #trash .sortable-placeholder {
-    height: 94px;
+    height: 100%;
     width: 79px;
     top: 0px;
     right: -1px;
