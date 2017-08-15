@@ -136,9 +136,20 @@ class window.TransformAction extends Action
             theta = 0
         dx = @transform.dx * Math.cos(theta) - @transform.dy * Math.sin(theta)
         dy = @transform.dx * Math.sin(theta) + @transform.dy * Math.cos(theta)
+
+        newLeft = sprite.getLeft() + dx
+        newTop = sprite.getTop() + dy
+
+        # Destroy sprite once its outside the canvas
+        if newTop > sprite.canvas.height || newLeft > sprite.canvas.width
+            console.log('TransformAction Destroy: ' + sprite.spriteType)
+            sprite.removeFromList()
+            sprite.remove()
+            return
+
         sprite.set({
-            left: sprite.getLeft() + dx
-            top: sprite.getTop() + dy
+            left: newLeft
+            top: newTop
             angle: sprite.getAngle() - @transform.dr
             #width: @sprite.getWidth() * transform.dxScale
             width: sprite.width + @transform.dxScale

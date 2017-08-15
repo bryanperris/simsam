@@ -170,7 +170,7 @@
     };
 
     TransformAction.prototype.act = function(sprite) {
-      var dx, dy, range, rawAngle, theta;
+      var dx, dy, newLeft, newTop, range, rawAngle, theta;
       console.log('TransformAction: ' + sprite.spriteType);
       rawAngle = sprite.getAngle();
       if (this.stateRandom) {
@@ -184,9 +184,17 @@
       }
       dx = this.transform.dx * Math.cos(theta) - this.transform.dy * Math.sin(theta);
       dy = this.transform.dx * Math.sin(theta) + this.transform.dy * Math.cos(theta);
+      newLeft = sprite.getLeft() + dx;
+      newTop = sprite.getTop() + dy;
+      if (newTop > sprite.canvas.height || newLeft > sprite.canvas.width) {
+        console.log('TransformAction Destroy: ' + sprite.spriteType);
+        sprite.removeFromList();
+        sprite.remove();
+        return;
+      }
       sprite.set({
-        left: sprite.getLeft() + dx,
-        top: sprite.getTop() + dy,
+        left: newLeft,
+        top: newTop,
         angle: sprite.getAngle() - this.transform.dr,
         width: sprite.width + this.transform.dxScale,
         height: sprite.height + this.transform.dyScale
