@@ -341,6 +341,7 @@ simObjectSelected = function (options) {
 
 simObjectCleared = function (options) {
     $('#multi-delete').hide(); // in case this was clearing a multi select
+
     if (currentSimObject && typeof currentSimObject.cleared === 'function') {
         currentSimObject.cleared();
     }
@@ -348,16 +349,12 @@ simObjectCleared = function (options) {
         cloneWidgetHide();
         return;
     }
-    //$('#selected').hide(250);
+
     if (currentSimObject !== undefined && currentSimObject !== null) {
-        rec = currentSimObject.hasOwnProperty('stateRecording') && currentSimObject.stateRecording;
-        tran = currentSimObject.hasOwnProperty('stateTranspose') && currentSimObject.stateTranspose;
-        if (rec || tran) {
-            showCanceled();
-        }
         modifyingHide(currentSimObject);
         hideRecording();
     }
+
     currentSimObject = null;
 }
 simMultiSelect = function (options) {
@@ -1088,6 +1085,7 @@ modifyingShow = function (obj) {
 
 modifyingCancel = function () {
     modifyingHide();
+    showCanceled();
 }
 
 // Sim Measurables
