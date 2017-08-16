@@ -1,2 +1,3 @@
 ---
-- { path: /var/project, ignore: [ sqlite3_db ] }
+- { path: /var/project, ignore: [ sqlite3_db, "media/sam_frames/*", "media/sprites/*" ] }
+- { src: media/sprites, path: /var/project/media/sprites, no_delete: true }
