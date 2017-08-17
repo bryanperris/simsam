@@ -56,9 +56,9 @@ $ ->
         $("#record_mode").click toggleMode
     
         #http://farhadi.ir/projects/html5sortable/
-        $("#video_output").sortable().bind 'sortupdate', rescanThumbnails
-        $("#video_output").sortable().bind 'sortupdate', saveFrameSequence
-        $("#trash").sortable({connectWith:"#video_output"}).bind 'receive', trash
+        # $("#video_output").sortable().bind 'sortupdate', rescanThumbnails
+        # $("#video_output").sortable().bind 'sortupdate', saveFrameSequence
+        # $("#trash").sortable({connectWith:"#video_output"}).bind 'receive', trash
         
         # prevent text highlighting
         # opera-specific
@@ -165,6 +165,17 @@ $ ->
         chrt.innerHTML = ''
         $(chrt).click( (ev) -> spriteChartClick(this, ev))
         output.appendChild chrt
+
+    makeSortable = ->
+        # Make film slides sortable (must be called eveytime the film is updated)
+        # sortable('#video_output', 'destroy');
+        # sortable('#trash', 'destroy');
+
+        sortable("#trash",  { connectWith: "connectedlist" })[0].addEventListener 'sortupdate', trash
+
+        sortable("#video_output", { connectWith: "connectedlist" })[0].addEventListener 'sortupdate', ->
+            rescanThumbnails()
+            saveFrameSequence()
     
     loadFrames = (frame) ->
         output = $("#video_output").get(0)
@@ -194,13 +205,12 @@ $ ->
         frameRegistry[frame] = canvas_el
         
         output.appendChild thumbnail
-        $("#video_output").sortable "refresh"
+        # $("#video_output").sortable "refresh"
     
         rescanThumbnails()
      
         placeFrame frameIndex, (if recording then overlayClass else playbackClass)
-        
-    
+   
     makeUnselectable = (node) ->
         if node.nodeType is 1
             node.setAttribute "unselectable", "on"
@@ -318,7 +328,7 @@ $ ->
         else
             output.appendChild(thumbnail)
     
-        $("#video_output").sortable "refresh"
+        # $("#video_output").sortable "refresh"
         
         # make the thumbnail clickable and sort the playback frames to match
         rescanThumbnails()
@@ -440,6 +450,8 @@ $ ->
                 # if it's in recording mode then overlay, otherwise opaque
                 placeFrame index, (if recording then overlayClass else playbackClass)
                 window.playbackIndex = index
+
+        makeSortable()
     
     # Called by the "trash" (really a sortable list linked with the thumbnail
     # list) when a thumbnail is dropped in. Deletes the thumbnail and resyncs.
