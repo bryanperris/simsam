@@ -293,7 +293,8 @@ $ ->
             frameId = frameIndex = 0
         else
             # add it after the current play index
-            frameIndex = playbackIndex + 1
+            frameIndex = playbackFrames.length - 1
+            console.log("insert at frame index %d", frameIndex)
             frameId = getRandomId()
             playbackFrames.splice(frameIndex, 0, frame)
             
@@ -313,7 +314,7 @@ $ ->
         
         # display the thumbnail at the correct position
         if playbackFrames.length > 1
-            $("#video_output canvas:eq(#{playbackIndex})").after(thumbnail)
+            $("#video_output canvas:eq(#{frameIndex})").after(thumbnail)
         else
             output.appendChild(thumbnail)
     
