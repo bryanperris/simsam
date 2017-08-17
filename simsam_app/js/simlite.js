@@ -137,13 +137,7 @@ setCanvasSize = function (width) {
     }
 
     $('#saved').css(globalPos);
-    var w = $('#canceled').width();
-    $('#canceled').css({
-        top: globalPos.top,
-        left: globalPos.left + canvas.getWidth() - w - 10,
-    });
     $('#saved').hide(0);
-    $('#canceled').hide(0);
     sizeDrawer();
 }
 
@@ -440,10 +434,6 @@ function startRecording(selectedObject, recType) {
 showSaved = function (data, textStatus, jqXHR) {
     $('#saved').show();
     $('#saved').fadeOut(1000);
-}
-showCanceled = function (data, textStatus, jqXHR) {
-    $('#canceled').show();
-    $('#canceled').fadeOut(1000);
 }
 
 showRecording = function (recType) {
@@ -1085,7 +1075,6 @@ modifyingShow = function (obj) {
 
 modifyingCancel = function () {
     modifyingHide();
-    showCanceled();
 }
 
 // Sim Measurables
