@@ -408,9 +408,6 @@ $ ->
         $(frame).addClass className
         frame.id = "canvas"
         $("#replay").append frame
-    
-    placeBlankFrame = ->
-        $("#replay").append('<div class="blank-frame"><div>nothing here</div></div>')
         
     # run through the canvas elements in the thumbnail list and update
     # everything to be in sync with those thumbnails, including the onclick
@@ -470,7 +467,6 @@ $ ->
                 # if there are no frames, show a special message saying so
                 else
                     clearPlayback()
-                    placeBlankFrame()
         saveFrameSequence()
         if window.playbackFrames.length == 0 then $('#startcropping').hide()
     
@@ -552,7 +548,6 @@ $ ->
             placeFrame max, playbackClass
         else
             clearPlayback()
-            placeBlankFrame()
         
     # functions to switch between sam and sim
     startSimlite = ->
@@ -664,10 +659,10 @@ $ ->
     window.switchToPlaybackMode = ->
         console.log("switchToPlaybackMode()")
         recording = false
+
         if playbackFrames.length > 0
             placeFrame window.playbackIndex, playbackClass
-        else
-            placeBlankFrame()
+
         $('#play_mode').removeClass('small').addClass('big')
         $('#record_mode').removeClass('big').addClass('small')
         $('#play_mode').unbind('click').click play
