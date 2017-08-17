@@ -728,13 +728,14 @@
           return
         }
         e.preventDefault()
-        e.stopPropagation()
+        e.stopPropagation();
         e.dataTransfer.dropEffect = 'move'
         debouncedDragOverEnter(this, e.pageY)
       }
   
       _on(items.concat(sortableElement), 'dragover', onDragOverEnter)
       _on(items.concat(sortableElement), 'dragenter', onDragOverEnter)
+      _on(items.concat(sortableElement), 'drag', onDragOverEnter)
     })
   
     return sortableElements

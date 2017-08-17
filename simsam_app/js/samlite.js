@@ -42,6 +42,16 @@
       $("#right_menu_button").click(toggleMenu);
       $("#play_mode").click(play);
       $("#record_mode").click(toggleMode);
+      sortable("#video_output, #trash", {
+        connectWith: "filmlist",
+        items: "canvas",
+        forcePlaceholderSize: true
+      });
+      sortable("#video_output")[0].addEventListener('sortupdate', function(event) {
+        rescanThumbnails();
+        return saveFrameSequence();
+      });
+      sortable("#trash")[0].addEventListener('sortupdate', trash);
       makeUnselectable($(document.body).get(0));
       if (window.spritecollection.length === 0) {
         addSimSam();
@@ -137,15 +147,8 @@
       return output.appendChild(chrt);
     };
     makeSortable = function() {
-      sortable("#trash", {
-        connectWith: "connectedlist"
-      })[0].addEventListener('sortupdate', trash);
-      return sortable("#video_output", {
-        connectWith: "connectedlist"
-      })[0].addEventListener('sortupdate', function() {
-        rescanThumbnails();
-        return saveFrameSequence();
-      });
+      console.log("make sortable called");
+      return sortable('.filmlist');
     };
     loadFrames = function(frame) {
       var canvas_el, context, ctx, frameId, frameIndex, frameOrdinal, img, output, thumb, thumbnail;
@@ -174,6 +177,7 @@
       $(canvas_el).attr("data-frame-id", frame);
       frameRegistry[frame] = canvas_el;
       output.appendChild(thumbnail);
+      makeSortable();
       rescanThumbnails();
       return placeFrame(frameIndex, (recording ? overlayClass : playbackClass));
     };
@@ -268,6 +272,7 @@
       } else {
         output.appendChild(thumbnail);
       }
+      makeSortable();
       rescanThumbnails();
       placeFrame(frameIndex, overlayClass);
       window.playbackIndex = frameIndex;
@@ -367,7 +372,7 @@
       window.playbackFrames = [];
       idsToSave = [];
       first = true;
-      $("#video_output *").each(function(index, thumbnail) {
+      return $("#video_output *").each(function(index, thumbnail) {
         var frameId;
         frameId = $(thumbnail).attr("data-frame-id");
         if (first) {
@@ -385,7 +390,6 @@
           return window.playbackIndex = index;
         });
       });
-      return makeSortable();
     };
     trash = function(event) {
       var max;
@@ -393,8 +397,8 @@
         console.log("trash");
       }
       $("#trash canvas").remove();
-      $("#trash .sortable-placeholder").remove();
       rescanThumbnails();
+      makeSortable();
       if (window.playbackIndex >= playbackFrames.length) {
         max = playbackFrames.length - 1;
         window.playbackIndex = max;
