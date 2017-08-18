@@ -57,8 +57,7 @@ $ ->
     
         # https://github.com/lukasoppermann/html5sortable
         sortable("#video_output, #trash", { 
-            connectWith: "filmlist", 
-            items: "canvas",
+            connectWith: "filmlist",
             forcePlaceholderSize: true 
         })
 
@@ -67,7 +66,7 @@ $ ->
             saveFrameSequence()
 
         sortable("#trash")[0].addEventListener 'sortupdate', trash
-        
+
         # prevent text highlighting
         # opera-specific
         makeUnselectable $(document.body).get 0
@@ -177,7 +176,7 @@ $ ->
     makeSortable = -> 
         console.log("make sortable called")
         sortable('.filmlist');
-
+        $("#trash img").attr "draggable", "false"
     
     loadFrames = (frame) ->
         output = $("#video_output").get(0)

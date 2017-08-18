@@ -735,11 +735,6 @@
   
       _on(items.concat(sortableElement), 'dragover', onDragOverEnter)
       _on(items.concat(sortableElement), 'dragenter', onDragOverEnter)
-
-      /* Hack for firefox to make drag callback get called more */
-      if ($.browser.mozilla) {
-        _on(items.concat(sortableElement), 'drag', onDragOverEnter)
-      }
     })
   
     return sortableElements

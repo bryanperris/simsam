@@ -44,7 +44,6 @@
       $("#record_mode").click(toggleMode);
       sortable("#video_output, #trash", {
         connectWith: "filmlist",
-        items: "canvas",
         forcePlaceholderSize: true
       });
       sortable("#video_output")[0].addEventListener('sortupdate', function(event) {
@@ -148,7 +147,8 @@
     };
     makeSortable = function() {
       console.log("make sortable called");
-      return sortable('.filmlist');
+      sortable('.filmlist');
+      return $("#trash img").attr("draggable", "false");
     };
     loadFrames = function(frame) {
       var canvas_el, context, ctx, frameId, frameIndex, frameOrdinal, img, output, thumb, thumbnail;
