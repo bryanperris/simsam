@@ -876,37 +876,35 @@ setSproutUILocation = function (sprout) {
 }
 
 sproutWidgetShow = function (obj) {
-    console.log("sproutWidgitShow");
+    console.log("Sprout widget show"); sproutWidgetShow
+
     // First, we should choose the object we're going to interact with.
     $('#sprout-ui').empty();
     $('#sprout-ui').html('<h1>Make a new... (pick one)</h1>');
 
-    // Insert images
-    for (var i = 0; i < spriteTypeList.length; i++) {
-        console.log('In interacting for loop');
-        var spImage = new window.spriteTypeList[i];
+    for (var i = 0; i < window.spritecollection.length; i++) {
+        var type =  window.spritecollection[i];
+        var spImage = new window.spriteTypeList[type];
         var imgSrc = spImage.getSrc();
         var iEl = document.createElement('img');
         iEl.src = imgSrc;
-        iEl.setAttribute('data-target-type', i);
-        //$(iEl).data('targetType', i);
-        // This function calls back to setup the SproutAction with the
-        // appropriate target
+        iEl.setAttribute('data-target-idx', i);
+
         $(iEl).click(function () {
             console.log('sprout src = ' + this.src);
-            var tType = $(this).data('target-type');
-            obj.setSproutTarget(tType);
-            tType = obj.getSproutTarget();
+            obj.setSproutTarget(type);
             sproutCloningWidgetShow(obj);
             $('#sprout-ui').hide();
+            modifyingHide();
         });
+
         $('#sprout-ui').append(iEl);
         delete spImage;
     }
-    setSproutUILocation(cloneObj);
+
+    setSproutUILocation(obj);
     $('#clone-name').html('Sprout');
     $('#sprout-ui').show();
-
 }
 
 sproutCloningWidgetShow = function (obj) {
@@ -928,8 +926,7 @@ sproutCloningWidgetShow = function (obj) {
     var startY = y + xo * Math.sin(theta) + yo * Math.cos(theta);
 
     var targetType = obj.getSproutTarget();
-    //var targetObj = new window.spriteTypeList[targetType];
-    var targetObj = new window.getSpriteType(targetType);
+    var targetObj = new window.spriteTypeList[targetType];
 
     var imgElement = document.createElement('img');
     imgElement.src = targetObj.getSrc();
@@ -943,16 +940,18 @@ sproutCloningWidgetShow = function (obj) {
         cornerSize: 20,
         angle: obj.getAngle(),
     });
+
     cloneObj.myOriginalTop = startY;
     cloneObj.myOriginalLeft = startX;
+    
     cloneObj.modified = function () {
         setSproutUILocation(this);
     }
+
     cloneObj.daddy = obj;
     canvas.add(cloneObj);
     cloneObj.bringToFront();
     canvas.setActiveObject(cloneObj);
-
 }
 
 sproutWidgetHide = function (obj) {
@@ -1574,14 +1573,22 @@ $(document).ready(function () {
         }
     });
 
+    /* When user clicks on "make new object"
+       Add the sprout rule to the sprite
+       Sprout target is selected by the picker: sproutWidgetShow */
+
     $('#uimod_sprout').click(function () {
         g_recordingClone = true;
         obj = canvas.getActiveObject();
+
         if (!obj.isEditing) return;
+
+        /* If already a sprout, remove it */
         if (obj.isSprout()) {
             obj.removeSprout();
             $(this).removeClass('highlight');
         } else {
+            /* Add sprout rule to sprite */
             obj.addSprout();
             $(this).addClass('highlight');
             sproutWidgetShow(obj);

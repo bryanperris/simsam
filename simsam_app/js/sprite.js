@@ -243,10 +243,8 @@
       return this._rules.length - 1;
     };
 
-    GenericSprite.prototype.setRule = function(spriteType, rule) {
-      var ruleIntType;
-      ruleIntType = rule.typeint;
-      this._rules[spriteType][ruleIntType] = rule;
+    GenericSprite.prototype.setRule = function(ruleType, rule) {
+      this._rules[ruleType] = rule;
       return window.save();
     };
 
@@ -289,19 +287,15 @@
       var r;
       r = new Rule();
       r.setActionType('sprout');
-      return this.setRule(c_sproutRule, r);
+      return this.setRule(1, r);
     };
 
     GenericSprite.prototype.setSproutTarget = function(targetValue) {
-      var r;
-      r = this._rules[c_sproutRule];
-      return r.action.setTarget(targetValue);
+      return this._rules[1].action.setTarget(targetValue);
     };
 
     GenericSprite.prototype.getSproutTarget = function() {
-      var r;
-      r = this._rules[c_sproutRule];
-      return r.action.getTarget();
+      return this._rules[1].action.getTarget();
     };
 
     GenericSprite.prototype.removeSprout = function() {

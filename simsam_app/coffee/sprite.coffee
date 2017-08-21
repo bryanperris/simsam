@@ -222,9 +222,8 @@ class window.GenericSprite extends fabric.Image
         return @_rules.length - 1
 
     # will complain if given a bad index
-    setRule: (spriteType, rule) ->
-        ruleIntType = rule.typeint
-        @_rules[spriteType][ruleIntType] = rule
+    setRule: (ruleType, rule) ->
+        @_rules[ruleType] = rule
         window.save()
 
     # index of the irule so we overwrite duplicates
@@ -266,15 +265,13 @@ class window.GenericSprite extends fabric.Image
     addSprout: ->
         r = new Rule()
         r.setActionType('sprout')
-        this.setRule(c_sproutRule, r)
+        this.setRule(1, r)
 
     setSproutTarget: (targetValue) ->
-        r = this._rules[c_sproutRule]
-        r.action.setTarget(targetValue)
+        @_rules[1].action.setTarget(targetValue)
 
     getSproutTarget: ->
-        r = this._rules[c_sproutRule]
-        return r.action.getTarget()
+        return @_rules[1].action.getTarget()
 
     removeSprout: ->
         if this._rules[c_sproutRule] != undefined and
