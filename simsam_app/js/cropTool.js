@@ -213,7 +213,9 @@ function getResults() {
     //sprite_drawer.appendChild(temp_canvas); //display in drawer
 
     saveCropCanvas(temp_canvas, frameId); //save the cropped image
-    $("#sprite_drawer").sortable("refresh");
+    console.log("make sortable from cropTool")
+    sortable('.filmlist');
+    $("#trash img").attr("draggable", "false");
 
     showStartCroppingButton();
     window.isCropping = false;
