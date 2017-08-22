@@ -321,7 +321,7 @@ simObjectSelected = function (options) {
         currentSimObject.cleared();
     }
     // We're waiting for a select to occur on a measurement
-    if (interactionWaiting) {
+    if (interactionWaiting && currentTracker != null) {
         currentTracker.targetSprite = canvas.getActiveObject();
         canvas.discardActiveObject();
         interactionWaiting = false;
