@@ -595,27 +595,20 @@
   window.textList = [];
 
   window.tick = function() {
-    var j, k, l, len, len1, len2, len3, len4, m, n, sprite;
+    var j, k, len, len1, sprite;
     for (j = 0, len = spriteList.length; j < len; j++) {
       sprite = spriteList[j];
-      sprite.applyRules();
-    }
-    for (k = 0, len1 = spriteList.length; k < len1; k++) {
-      sprite = spriteList[k];
-      sprite.prepIRules();
-    }
-    for (l = 0, len2 = spriteList.length; l < len2; l++) {
-      sprite = spriteList[l];
-      sprite.applyIRules();
-    }
-    for (m = 0, len3 = spriteList.length; m < len3; m++) {
-      sprite = spriteList[m];
-      if (!sprite.isOnCanvas()) {
-        spriteDeleteList.push(sprite);
+      if (sprite !== void 0) {
+        sprite.applyRules();
+        sprite.prepIRules();
+        sprite.applyIRules();
+        if (!sprite.isOnCanvas()) {
+          spriteDeleteList.push(sprite);
+        }
       }
     }
-    for (n = 0, len4 = spriteDeleteList.length; n < len4; n++) {
-      sprite = spriteDeleteList[n];
+    for (k = 0, len1 = spriteDeleteList.length; k < len1; k++) {
+      sprite = spriteDeleteList[k];
       sprite.removeFromList();
       sprite.remove();
     }

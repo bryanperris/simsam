@@ -544,18 +544,19 @@ window.textList = []
 #  Third, Apply interaction rules matched by #2.
 window.tick = ->
     for sprite in spriteList
-        sprite.applyRules()
-    for sprite in spriteList
-        sprite.prepIRules()
-    for sprite in spriteList
-        sprite.applyIRules()
-    for sprite in spriteList
-        if not sprite.isOnCanvas()
-            spriteDeleteList.push(sprite)
+        if sprite != undefined
+            sprite.applyRules()
+            sprite.prepIRules()
+            sprite.applyIRules()
+
+            if not sprite.isOnCanvas()
+                spriteDeleteList.push(sprite)
+                
     # post-process removes so we don't kill the list while executing
     for sprite in spriteDeleteList
         sprite.removeFromList()
         sprite.remove()
+
     canvas.renderAll.bind(canvas)
     canvas.renderAll()
 
