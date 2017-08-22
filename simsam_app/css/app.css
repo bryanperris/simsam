@@ -2,7 +2,7 @@
   font-family: 'Averia Sans Libre';
   font-style: normal;
   font-weight: 400;
-  src: local('Averia Sans Libre Regular'), local('AveriaSansLibre-Regular'), url(http://themes.googleusercontent.com/static/fonts/averiasanslibre/v2/yRJpjT39KxACO9F31mj_LhlS6V2rbkt3HRj5hz1lBB8.woff) format('woff');
+  src: local('Averia Sans Libre Regular'), local('AveriaSansLibre-Regular'), url(https://themes.googleusercontent.com/static/fonts/averiasanslibre/v2/yRJpjT39KxACO9F31mj_LhlS6V2rbkt3HRj5hz1lBB8.woff) format('woff');
 }
 
 @font-face {
