@@ -587,63 +587,64 @@ deleteImageSingle = function (obj) {
     deleteImageInternal(messageInfo, onSuccess);
 }
 
+_deleteSprite = function (spriteType, classImage, permanently, special) {
+    canvas.forEachObject(function (iterObj) {
+        if (iterObj.spriteType == spriteType) {
+            iterObj._count = 0;
+            iterObj.removeFromList();
+            iterObj.remove();
+            delete iterObj;
+        }
+    });
+
+    $(classImage).remove();
+
+    if (permanently || special) {
+        delete spriteTypeList[spriteType];
+
+        /* Scan the sprite collection to find the one and delete it */
+        for (var i = 0; i < window.spritecollection.length; i++) {
+            if (window.spritecollection[i] == spriteType) {
+                delete window.spritecollection[i];
+                break;
+            }
+        }
+
+        if (!special)
+            djangoDeleteImage(image_hash);
+    }
+
+    window.save();
+}
+
 // Remove all instances of the image from the sim/screen only
 deleteImageClass = function (spriteType, classImage) {
-
     messageInfo = {
         message: 'All items of this type will be permanently deleted.  Are you sure?',
         title: 'Delete all objects of this type?',
         button: 'Delete All',
     };
+
     onSuccess = function () {
-        canvas.forEachObject(function (iterObj) {
-            if (iterObj.spriteType == spriteType) {
-                iterObj._count = 0;
-                iterObj.removeFromList();
-                iterObj.remove();
-                delete iterObj;
-            }
-        });
-        $(classImage).remove();
+        _deleteSprite(spriteType, classImage, false, false);
     }
+
     deleteImageInternal(messageInfo, onSuccess);
 }
 
 // Remove all iamges from the screen/sim and from the db and all animations
+// isSpecial: Use this for demo props
 deleteImageFully = function (spriteType, classImage) {
     messageInfo = {
-        message: 'This sprite and all instances will be permanently deleted. ' +
-            'Are you sure?',
+        message: 'This sprite and all instances will be permanently deleted. Are you sure?',
         title: 'Delete this image fully?',
         button: 'Delete All',
     };
+
     onSuccess = function () {
-        canvas.forEachObject(function (iterObj) {
-            if (iterObj.spriteType == spriteType) {
-                iterObj.removeFromList();
-                iterObj.remove();
-                delete iterObj;
-            }
-        });
-        image_hash = $(classImage).attr('data-hash');
-        $(classImage).remove();
-        djangoDeleteImage(image_hash);
-
-        /* something here is not working
-		for(i = 0; i < spriteTypeList.length; i++){
-			tempobj = new spriteTypeList[i];
-			if(tempobj.spriteType == spriteType){
-				spriteTypeList.splice(i, 1);
-				save();
-				break;
-			}
-		}*/
-
-        delete spriteTypeList[spriteType];
-
-        window.save();
-
+        _deleteSprite(spriteType, classImage, true, false);
     }
+
     deleteImageInternal(messageInfo, onSuccess);
 }
 
@@ -876,14 +877,15 @@ setSproutUILocation = function (sprout) {
 }
 
 sproutWidgetShow = function (obj) {
-    console.log("Sprout widget show"); sproutWidgetShow
+    console.log("Sprout widget show");
+    sproutWidgetShow
 
     // First, we should choose the object we're going to interact with.
     $('#sprout-ui').empty();
     $('#sprout-ui').html('<h1>Make a new... (pick one)</h1>');
 
     for (var i = 0; i < window.spritecollection.length; i++) {
-        var type =  window.spritecollection[i];
+        var type = window.spritecollection[i];
         var spImage = new window.spriteTypeList[type];
         var imgSrc = spImage.getSrc();
         var iEl = document.createElement('img');
@@ -943,7 +945,7 @@ sproutCloningWidgetShow = function (obj) {
 
     cloneObj.myOriginalTop = startY;
     cloneObj.myOriginalLeft = startX;
-    
+
     cloneObj.modified = function () {
         setSproutUILocation(this);
     }

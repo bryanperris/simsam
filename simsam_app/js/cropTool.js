@@ -125,7 +125,8 @@ function saveCropCanvas(canvas, tempId) {
 		
 	done = function(response) {
 		var frame;
-		console.log("save canvas ajax response", response);
+        console.log("save canvas ajax response", response);
+        
 		if (response.success) {
 			frame = cropFrameRegistry[tempId];
 			delete cropFrameRegistry[tempId];
@@ -148,13 +149,18 @@ function saveCropCanvas(canvas, tempId) {
             addSpriteToSim(filename, hash); // this adds it to the database
             window.samLoadSprites(hash) // this adds it to the spritedrawer
             window.addOneSprite(hash, img); // this adds it to spriteTypeList
+
+            /* Kill sam */
+			console.log('It appears that you want me to kill Sam. Here goes.');
+            _deleteSprite("moving3-4", $('#sprite_drawer > img[src="/media/sprites/moving3-4.jpg"]'), false, true);
+            
             reloadSpriteDrawer();
+            window.save();
 		}
 	};
-	results = $.ajax(ajaxOptions).done(done);
-	//console.log("move killSimSam to after ajax");
-	//killSimSam();
-	return results
+    results = $.ajax(ajaxOptions).done(done);
+
+	return results;
 }
 
 function reloadSpriteDrawer() {
