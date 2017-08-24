@@ -189,6 +189,27 @@ def save_image(request):
         'message': message,
     }))
 
+
+@login_required
+def delete_image_only(request):
+    """I have the image URL, lets destroy it"""
+    image_hash = request.REQUEST.get('image_hash')
+    image_obj = Sprite()
+    image_obj.image_hash = image_hash
+
+    # Now walk through all animations and remove this instance
+    animations = Animation.objects.all()
+    for animation in animations:
+        animList = animation.sprite_collection
+        if image_hash in animList:
+            animList.remove(image_hash)
+        animation.save()
+
+    return HttpResponse(json.dumps({
+        'success': True,
+        'message': ''
+    }))
+
 @login_required
 def save_image_only(request):
     """I have the image URL. Now let me save it"""

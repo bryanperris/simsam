@@ -185,6 +185,33 @@ getWorldPoint = function (evPoint) {
     };
 }
 
+addSimSam = function () {
+    console.log('It appears that you have nothing in your drawer. Have a Sam.');
+    var simsamimage = new Image();
+    simsamimage.src = "/media/sprites/moving3-4.jpg";
+    simsamimage.className = 'sprite';
+    simsamimage.setAttribute('data-hash', 'moving3-4');
+    simsamimage.setAttribute('data-sprite-type', 0);
+    simsamimage.setAttribute('data-debug', 'addSimSam');
+    var spritedrawer =  $("#sprite_drawer").get(0);
+    spritedrawer.appendChild(simsamimage);
+    // He's simSam. He's allowed to have a hash = 0
+    window.addOneSprite(0, simsamimage);
+    //$("#sprite_drawer").sortable("refresh");
+    var ajaxOptions;
+    ajaxOptions = {
+         url: "save_image_only",
+        type: "POST",
+        data: {
+           image_string: "moving3-4",
+           image_type: "Sprite",
+           animation_id: window.animationId
+        },
+        dataType: "json"
+    };
+    $.ajax(ajaxOptions);
+}
+
 sizeDrawer = function () {
     var drawer = $('#sprite_drawer');
     var positionY = $(drawer).position().top;
@@ -519,6 +546,20 @@ djangoDeleteImage = function (image_hash) {
     });
 }
 
+//
+// Special sprites like green dude call this to preserve the file resource
+//
+djangoDeleteImageSpecial = function (image_hash) {
+    $.ajax({
+        url: 'delete_image_only',
+        type: 'POST',
+        data: {
+            image_hash: image_hash
+        },
+        dataType: 'json'
+    });
+}
+
 // Always just cached
 isProjectPublic = function (project_id) {
     return window.is_public;
@@ -597,6 +638,7 @@ _deleteSprite = function (spriteType, classImage, permanently, special) {
         }
     });
 
+    image_hash = $(classImage).attr('data-hash'); 
     $(classImage).remove();
 
     if (permanently || special) {
@@ -612,6 +654,8 @@ _deleteSprite = function (spriteType, classImage, permanently, special) {
 
         if (!special)
             djangoDeleteImage(image_hash);
+        else
+            djangoDeleteImageSpecial(image_hash);
     }
 
     window.save();
