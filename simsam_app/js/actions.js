@@ -53,6 +53,8 @@
         return;
       }
       newSprite = new window.spriteTypeList[sprite.spriteType];
+      newSprite.prepObj = sprite.prepObj;
+      newSprite.prePrepObj = sprite.prePrepObj;
       spriteList.push(newSprite);
       newSprite.setTop(sprite.getTop() + Math.random() * 76 - 38);
       newSprite.setLeft(sprite.getLeft() + Math.random() * 76 - 38);

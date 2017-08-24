@@ -34,6 +34,8 @@ class window.CloneAction extends Action
         if window.spriteTypeList[sprite.spriteType]::_count >= window.maxSprites
             return
         newSprite = new window.spriteTypeList[sprite.spriteType]  # make one
+        newSprite.prepObj = sprite.prepObj
+        newSprite.prePrepObj = sprite.prePrepObj
         spriteList.push( newSprite )
         newSprite.setTop(sprite.getTop() + Math.random() * 76 - 38)
         newSprite.setLeft(sprite.getLeft() + Math.random() * 76 - 38)
