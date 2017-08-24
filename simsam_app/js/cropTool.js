@@ -170,6 +170,9 @@ function reloadSpriteDrawer() {
     $("#sprite_drawer").append("<div id=\"trash_menu_button\" class=\"floating_button\">trash sprite class</div>");
     // repopulate drawer with images
     for( element in spriteTypeList ) {
+        /* We skip when element equals 0 because this is reserved for the green dude */
+        if (element == 0) continue;
+
         samLoadSprites( element );
     }
     // turn them into sim sprites
