@@ -647,7 +647,7 @@ _deleteSprite = function (spriteType, classImage, permanently, special) {
         /* Scan the sprite collection to find the one and delete it */
         for (var i = 0; i < window.spritecollection.length; i++) {
             if (window.spritecollection[i] == spriteType) {
-                delete window.spritecollection[i];
+                window.spritecollection.splice(i, 1);
                 break;
             }
         }
@@ -932,13 +932,16 @@ sproutWidgetShow = function (obj) {
         var type = window.spritecollection[i];
         var spImage = new window.spriteTypeList[type];
         var imgSrc = spImage.getSrc();
+
+
         var iEl = document.createElement('img');
         iEl.src = imgSrc;
         iEl.setAttribute('data-target-idx', i);
+        iEl.type = type;
 
         $(iEl).click(function () {
             console.log('sprout src = ' + this.src);
-            obj.setSproutTarget(type);
+            obj.setSproutTarget(this.type);
             sproutCloningWidgetShow(obj);
             $('#sprout-ui').hide();
             modifyingHide();
